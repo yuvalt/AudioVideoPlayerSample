@@ -110,17 +110,17 @@ public class PlayerFragment extends Fragment {
 	/**
 	 * start playing
 	 */
-	private void startPlay() {
-		if (DEBUG) Log.v(TAG, "startRecording:");
+	public void startPlay() {
+		if (DEBUG) Log.v(TAG, "startPlay:");
 		final Activity activity = getActivity();
 		try {
 			final File dir = activity.getFilesDir();
 			dir.mkdirs();
-			final File path = new File(dir, "easter_egg_nexus9_small.mp4");
+			final File path = new File(dir,"leftlunges_oriana.mp4");
 			prepareSampleMovie(path);
 			mPlayerButton.setColorFilter(0x7fff0000);	// turn red
 //			mPlayer = new MediaVideoPlayer(mPlayerView.getSurface(), mIFrameCallback);
-			mPlayer = new MediaMoviePlayer(mPlayerView.getSurface(), mIFrameCallback, true);
+			mPlayer = new MediaMoviePlayer(mPlayerView.getSurface(), mIFrameCallback, false);
 			mPlayer.prepare(path.toString());
 		} catch (IOException e) {
 			Log.e(TAG, "startPlay:", e);
