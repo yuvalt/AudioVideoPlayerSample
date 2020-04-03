@@ -10,7 +10,7 @@ android {
 
 	defaultConfig {
 		applicationId "com.serenegiant.audiovideoplayersample"
-		minSdkVersion 18
+		minSdkVersion 23
 		targetSdkVersion versionTarget
 		versionCode versionCodeNum
 		versionName versionNameString

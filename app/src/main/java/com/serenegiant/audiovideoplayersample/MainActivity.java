@@ -49,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
 		if (hasFocus) {
 			hideSystemUI();
 		}
-
-		frag.startPlay();
 	}
 
 	private void hideSystemUI() {

@@ -34,6 +34,7 @@ import com.serenegiant.widget.PlayerTextureView;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -72,7 +73,24 @@ public class PlayerFragment extends Fragment {
 		mPlayerView.setAspectRatio(640 / 480.f);
 		mPlayerButton = (ImageButton)rootView.findViewById(R.id.play_button);
 		mPlayerButton.setOnClickListener(mOnClickListener);
+		mPlayerButton.setVisibility(View.INVISIBLE);
 		return rootView;
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		Handler handler = new Handler();
+		int delay = 2000; //milliseconds
+
+		handler.postDelayed(new Runnable(){
+			public void run(){
+				//do something
+				//handler.postDelayed(this, delay);
+				startPlay();
+			}
+		}, delay);
 	}
 
 	@Override
@@ -113,18 +131,18 @@ public class PlayerFragment extends Fragment {
 	public void startPlay() {
 		if (DEBUG) Log.v(TAG, "startPlay:");
 		final Activity activity = getActivity();
-		try {
+//		try {
 			final File dir = activity.getFilesDir();
 			dir.mkdirs();
 			final File path = new File(dir,"leftlunges_oriana.mp4");
-			prepareSampleMovie(path);
+			//prepareSampleMovie(path);
 			mPlayerButton.setColorFilter(0x7fff0000);	// turn red
 //			mPlayer = new MediaVideoPlayer(mPlayerView.getSurface(), mIFrameCallback);
 			mPlayer = new MediaMoviePlayer(mPlayerView.getSurface(), mIFrameCallback, false);
 			mPlayer.prepare(path.toString());
-		} catch (IOException e) {
-			Log.e(TAG, "startPlay:", e);
-		}
+//		} catch (IOException e) {
+//			Log.e(TAG, "startPlay:", e);
+//		}
 	}
 
 	/**
