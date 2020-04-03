@@ -25,6 +25,7 @@ package com.serenegiant.audiovideoplayersample;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 
 		if (savedInstanceState == null) {
+			Log.v("XX", "onCreate1");
+			initWrnchJNI();
+			Log.v("XX", "onCreate1");
+
 			frag = new PlayerFragment();
 
 			getSupportFragmentManager().beginTransaction()
@@ -67,4 +72,11 @@ public class MainActivity extends AppCompatActivity {
 						| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
 						| View.SYSTEM_UI_FLAG_FULLSCREEN);
 	}
+
+	static {
+		System.loadLibrary("native-lib");
+	}
+
+	public native void initWrnchJNI();
+//	public native void processWrnchJni(byte[] bgr, int width, int height);
 }
