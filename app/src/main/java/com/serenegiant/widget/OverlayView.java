@@ -25,9 +25,10 @@ public class OverlayView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+
         for (int i = 0; i < points.length; i++) {
             //			Log.v(TAG, Float.toString(points[i].x) + "," + Float.toString(points[i].y));
-            canvas.drawCircle(points[i].x, points[i].y, 20, paint);
+            canvas.drawCircle(points[i].x, points[i].y, 10, paint);
         }
     }
 }

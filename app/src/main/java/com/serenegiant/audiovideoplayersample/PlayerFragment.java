@@ -73,7 +73,7 @@ public class PlayerFragment extends Fragment {
 		final OverlayView overlayView = (OverlayView) rootView.findViewById(R.id.overlay_view);
 
 		mPlayerView = (PlayerTextureView)rootView.findViewById(R.id.player_view);
-		mPlayerView.setAspectRatio(640 / 480.f);
+		mPlayerView.setAspectRatio(16 / 9.f);
 		mPlayerView.setOverlayView(overlayView);
 
 		mPlayerButton = (ImageButton)rootView.findViewById(R.id.play_button);
@@ -139,8 +139,12 @@ public class PlayerFragment extends Fragment {
 //		try {
 			final File dir = activity.getFilesDir();
 			dir.mkdirs();
-			final File path = new File(dir,"leftlunges_oriana.mp4");
-			//prepareSampleMovie(path);
+//			final File path = new File(dir,"leftlunges_oriana.mp4");
+//			final File path = new File(dir,"jumpingjacks_tsella01.mp4");
+			final File path = new File(dir,"yuvalgreenfield.mp4");
+
+
+		//prepareSampleMovie(path);
 			mPlayerButton.setColorFilter(0x7fff0000);	// turn red
 //			mPlayer = new MediaVideoPlayer(mPlayerView.getSurface(), mIFrameCallback);
 			mPlayer = new MediaMoviePlayer(mPlayerView.getSurface(), mIFrameCallback, false);

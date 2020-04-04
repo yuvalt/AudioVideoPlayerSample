@@ -56,6 +56,7 @@ Java_com_serenegiant_audiovideoplayersample_Wrnch_initWrnchJNI(
     pose_options = wrPoseEstimatorOptions_Create();
     wrPoseEstimatorOptions_SetEnableJointSmoothing(pose_options, 1);
     wrPoseEstimatorOptions_SetEstimatePoseFace(pose_options, 1);
+    wrPoseEstimatorOptions_SetRotationMultipleOf90(pose_options, 0);
 
     wrJointDefinitionHandleConst format = wrPoseEstimator_GetHuman2DOutputFormat(pose_estimator);
 
@@ -108,10 +109,9 @@ Java_com_serenegiant_audiovideoplayersample_Wrnch_processWrnchJNI(
 //        auto scores = wrPose2d_GetScores(it);
 
         auto is_main = wrPose2d_GetIsMain(it);
-        __android_log_print(ANDROID_LOG_INFO, "WRNCH", "POSE SCORE: %.2f", pose_score);
+        __android_log_print(ANDROID_LOG_INFO, "WRNCH", "POSE SCORE: %.2f %d %d", pose_score, is_main, num_joints);
 
-        if (is_main == 1)
-        {
+        if (is_main == 1) {
             auto result = env->NewFloatArray(num_joints * 2);
             env->SetFloatArrayRegion(result, 0, num_joints * 2, joints);
             env->ReleaseByteArrayElements(img, b, 0);
