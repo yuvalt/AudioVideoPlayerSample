@@ -883,7 +883,7 @@ public class MediaMoviePlayer {
 	 * @return if return false, automatically adjust frame rate
 	 */
 	protected boolean internalWriteVideo(final ByteBuffer buffer, final int offset, final int size, final long presentationTimeUs) {
-//		if (DEBUG) Log.v(TAG, "internalWriteVideo");
+//		if (DEBUG) Log.v(TAG, "internalWriteVideo " + String.valueOf(offset) + " " + String.valueOf(size) + " " + String.valueOf(presentationTimeUs));
 		return false;
 	}
 

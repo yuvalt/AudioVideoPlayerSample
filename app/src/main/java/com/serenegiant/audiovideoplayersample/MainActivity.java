@@ -23,10 +23,61 @@ package com.serenegiant.audiovideoplayersample;
 */
 
 
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+class Wrnch {
+	static {
+		System.loadLibrary("native-lib");
+	}
+
+	static native void initWrnchJNI(String dir);
+
+	static public void init(Context context) throws IOException {
+		final File files = context.getFilesDir();
+		files.mkdir();
+
+		final AssetManager am = context.getAssets();
+		copyFile(am.open("wrsnpe_android_pose2d.enc"), files, "wrsnpe_android_pose2d.enc");
+		copyFile(am.open("libSNPE.so"), files, "libSNPE.so");
+		copyFile(am.open("libsnpe_adsp.so"), files, "libsnpe_adsp.so");
+		copyFile(am.open("libsnpe_dsp_domains_system.so"), files, "libsnpe_dsp_domains_system.so");
+		copyFile(am.open("libsnpe_dsp_domains_v2.so"), files, "libsnpe_dsp_domains_v2.so");
+		copyFile(am.open("libsnpe_dsp_domains_v2_system.so"), files, "libsnpe_dsp_domains_v2_system.so");
+		copyFile(am.open("libsnpe_dsp_v65_domains_v2_skel.so"), files, "libsnpe_dsp_v65_domains_v2_skel.so");
+		copyFile(am.open("libsnpe_dsp_v66_domains_v2_skel.so"), files, "libsnpe_dsp_v66_domains_v2_skel.so");
+
+		initWrnchJNI(files.getAbsolutePath());
+	}
+
+	private static void copyFile(InputStream in, File dir, String outputFile) throws IOException {
+		OutputStream out;
+
+		out = new FileOutputStream(new File(dir, outputFile));
+
+		byte[] buffer = new byte[8192];
+		int read;
+
+		while ((read = in.read(buffer)) != -1) {
+			out.write(buffer, 0, read);
+		}
+
+		in.close();
+		out.flush();
+		out.close();
+	}
+}
 
 public class MainActivity extends AppCompatActivity {
 	public PlayerFragment frag;
@@ -38,7 +89,12 @@ public class MainActivity extends AppCompatActivity {
 
 		if (savedInstanceState == null) {
 			Log.v("XX", "onCreate1");
-			initWrnchJNI();
+			try {
+				Wrnch.init(getApplicationContext());
+			}
+			catch (IOException e) {
+				Log.v("WRNCH", e.getMessage());
+			}
 			Log.v("XX", "onCreate1");
 
 			frag = new PlayerFragment();
@@ -73,10 +129,5 @@ public class MainActivity extends AppCompatActivity {
 						| View.SYSTEM_UI_FLAG_FULLSCREEN);
 	}
 
-	static {
-		System.loadLibrary("native-lib");
-	}
-
-	public native void initWrnchJNI();
 //	public native void processWrnchJni(byte[] bgr, int width, int height);
 }

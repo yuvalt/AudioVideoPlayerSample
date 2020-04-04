@@ -154,7 +154,7 @@ public class PlayerTextureView extends TextureView
 	@Override
 	public void onSurfaceTextureUpdated(SurfaceTexture surface) {
 		final Bitmap bitmap = getBitmap(244, 128);
-		Log.v(TAG, "onSurfaceTextureUpdated: " + bitmap.getHeight());
+//		Log.v(TAG, "onSurfaceTextureUpdated: " + bitmap.getHeight());
 
 		int bytes = bitmap.getByteCount();
 
