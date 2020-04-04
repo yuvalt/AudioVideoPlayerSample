@@ -32,8 +32,8 @@ Java_com_serenegiant_audiovideoplayersample_Wrnch_initWrnchJNI(
     wrPoseParams_SetBoneSensitivity(pose_params, wrSensitivity::wrSensitivity_HIGH);
     wrPoseParams_SetJointSensitivity(pose_params, wrSensitivity::wrSensitivity_HIGH);
     wrPoseParams_SetEnableTracking(pose_params, 1);
-    wrPoseParams_SetPreferredNetWidth2d(pose_params, 324);
-    wrPoseParams_SetPreferredNetHeight2d(pose_params, 184);
+//    wrPoseParams_SetPreferredNetWidth2d(pose_params, 324);
+//    wrPoseParams_SetPreferredNetHeight2d(pose_params, 184);
 
     auto params = wrPoseEstimatorConfigParams_Create(dir);
     wrPoseEstimatorConfigParams_SetLicenseString(params, "3A83A2-46FB01-48CB9F-EE06BF-3698DE-E05B71");
@@ -79,4 +79,57 @@ Java_com_serenegiant_audiovideoplayersample_Wrnch_initWrnchJNI(
     }
 
     __android_log_print(ANDROID_LOG_INFO, "WRNCH", "WRNCH Init Done");
+}
+
+extern "C" JNIEXPORT jfloatArray JNICALL
+Java_com_serenegiant_audiovideoplayersample_Wrnch_processWrnchJNI(
+        JNIEnv* env,
+        jobject /* this */,
+        jbyteArray img,
+        jint cols,
+        jint rows) {
+
+    jboolean isCopy;
+    jbyte* b = env->GetByteArrayElements(img, &isCopy);
+
+    auto rc = wrPoseEstimator_ProcessFrame(pose_estimator, (unsigned char*) b, cols, rows, pose_options);
+    if (rc != wrReturnCode_OK) {
+        __android_log_print(ANDROID_LOG_ERROR, "WRNCH", "wrPoseEstimator_ProcessFrame: %s", wrReturnCode_Translate(rc));
+        return env->NewFloatArray(0);
+    }
+
+    auto it = wrPoseEstimator_GetHumans2DBegin(pose_estimator);
+
+    for (int i = 0; i < wrPoseEstimator_GetNumHumans2D(pose_estimator); i++)
+    {
+        auto pose_score = wrPose2d_GetScore(it);
+        auto num_joints = wrPose2d_GetNumJoints(it);
+        auto joints = wrPose2d_GetJoints(it);
+//        auto scores = wrPose2d_GetScores(it);
+
+        auto is_main = wrPose2d_GetIsMain(it);
+        __android_log_print(ANDROID_LOG_INFO, "WRNCH", "POSE SCORE: %.2f", pose_score);
+
+        if (is_main == 1)
+        {
+            auto result = env->NewFloatArray(num_joints * 2);
+            env->SetFloatArrayRegion(result, 0, num_joints * 2, joints);
+            env->ReleaseByteArrayElements(img, b, 0);
+            return result;
+        }
+
+//        printf("Pose [%i / %i] : is main: %i.\n", i, wrPoseEstimator_GetNumHumans2D(pose_estimator), is_main);
+//        types::WrenchPose pose(sensor_data->point_cloud, pose_score, num_joints, joints, scores, joint_names);
+//        printf("Pose [%i / %i]: [%f | %s]\n", i, wrPoseEstimator_GetNumHumans2D(pose_estimator), pose_score, (pose.is_tracked() ? "Tracked!" : "Not tracked.."));
+//        poses.push_back(std::make_shared< types::PoseBase >(pose));
+
+        it = wrPoseEstimator_GetPose2DNext(it);
+    }
+
+    env->ReleaseByteArrayElements(img, b, 0);
+
+    auto result = env->NewFloatArray(0);
+    env->ReleaseByteArrayElements(img, b, 0);
+
+    return result;
 }

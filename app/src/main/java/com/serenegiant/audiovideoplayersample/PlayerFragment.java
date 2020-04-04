@@ -29,7 +29,7 @@ import java.io.IOException;
 
 import com.serenegiant.media.MediaMoviePlayer;
 import com.serenegiant.media.IFrameCallback;
-import com.serenegiant.media.MediaVideoPlayer;
+import com.serenegiant.widget.OverlayView;
 import com.serenegiant.widget.PlayerTextureView;
 
 import android.app.Activity;
@@ -69,8 +69,13 @@ public class PlayerFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+		final OverlayView overlayView = (OverlayView) rootView.findViewById(R.id.overlay_view);
+
 		mPlayerView = (PlayerTextureView)rootView.findViewById(R.id.player_view);
 		mPlayerView.setAspectRatio(640 / 480.f);
+		mPlayerView.setOverlayView(overlayView);
+
 		mPlayerButton = (ImageButton)rootView.findViewById(R.id.play_button);
 		mPlayerButton.setOnClickListener(mOnClickListener);
 		mPlayerButton.setVisibility(View.INVISIBLE);

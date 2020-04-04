@@ -24,12 +24,14 @@ package com.serenegiant.widget;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.SurfaceTexture;
-import android.opengl.GLES20;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.View;
+
+import com.serenegiant.audiovideoplayersample.Wrnch;
 
 import java.nio.ByteBuffer;
 
@@ -48,13 +50,6 @@ public class PlayerTextureView extends TextureView
 
 	public PlayerTextureView(Context context, AttributeSet attrs) {
 		this(context, attrs, 0);
-	}
-
-	private void GLCheckError() {
-		int error = GLES20.glGetError();
-		if (error != GLES20.GL_NO_ERROR) {
-			Log.e(TAG, "GLES20 error: " + error);
-		}
 	}
 
 	public PlayerTextureView(Context context, AttributeSet attrs, int defStyle) {
@@ -121,14 +116,6 @@ public class PlayerTextureView extends TextureView
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}
 
-	public void setSurfaceTexture() {
-		int textures[] = new int[1];
-		GLES20.glGenTextures(1, textures, 0);
-		GLCheckError();
-		Log.e(TAG, "XXX Create Texture: " + textures[0]);
-		getSurfaceTexture().attachToGLContext(textures[0]);
-	}
-
 	@Override
 	public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
 		// Create an OpenGL ES 2.0 context
@@ -138,8 +125,13 @@ public class PlayerTextureView extends TextureView
 		mSurface = new Surface(surface);
 	}
 
+	int width = 0;
+	int height = 0;
+
 	@Override
 	public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+		this.width = width;
+		this.height = height;
 	}
 
 	@Override
@@ -151,8 +143,16 @@ public class PlayerTextureView extends TextureView
 		return true;
 	}
 
+	private OverlayView overlayView;
+
+	public void setOverlayView(OverlayView overlayView) {
+		this.overlayView = overlayView;
+	}
+
 	@Override
 	public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+		final Bitmap orig = getBitmap();
+
 		final Bitmap bitmap = getBitmap(244, 128);
 //		Log.v(TAG, "onSurfaceTextureUpdated: " + bitmap.getHeight());
 
@@ -170,6 +170,11 @@ public class PlayerTextureView extends TextureView
 			pixels[i * 3 + 1] = temp[i * 4 + 2]; // G
 			pixels[i * 3 + 2] = temp[i * 4 + 1]; // R
 		}
+
+		final Point[] points = Wrnch.process(pixels, 244, 128, width, height);
+		overlayView.drawPoints(points);
+
+//		Log.v(TAG, "onSurfaceTextureUpdated done");
 	}
 
 	public Surface getSurface() {
