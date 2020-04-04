@@ -38,6 +38,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -71,6 +72,16 @@ public class PlayerFragment extends Fragment {
 		final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
 		final OverlayView overlayView = (OverlayView) rootView.findViewById(R.id.overlay_view);
+
+		Log.v("XX", "onCreate1");
+		try {
+			final Pair[] bones = Wrnch.init(getContext());
+			overlayView.setBones(bones);
+		}
+		catch (IOException e) {
+			Log.v("WRNCH", e.getMessage());
+		}
+		Log.v("XX", "onCreate1");
 
 		mPlayerView = (PlayerTextureView)rootView.findViewById(R.id.player_view);
 		mPlayerView.setAspectRatio(16 / 9.f);
@@ -139,9 +150,9 @@ public class PlayerFragment extends Fragment {
 //		try {
 			final File dir = activity.getFilesDir();
 			dir.mkdirs();
-//			final File path = new File(dir,"leftlunges_oriana.mp4");
+			final File path = new File(dir,"leftlunges_oriana.mp4");
 //			final File path = new File(dir,"jumpingjacks_tsella01.mp4");
-			final File path = new File(dir,"yuvalgreenfield.mp4");
+//			final File path = new File(dir,"yuvalgreenfield.mp4");
 
 
 		//prepareSampleMovie(path);

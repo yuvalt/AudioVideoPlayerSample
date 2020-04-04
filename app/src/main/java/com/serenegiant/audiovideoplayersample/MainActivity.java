@@ -39,15 +39,6 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 
 		if (savedInstanceState == null) {
-			Log.v("XX", "onCreate1");
-			try {
-				Wrnch.init(getApplicationContext());
-			}
-			catch (IOException e) {
-				Log.v("WRNCH", e.getMessage());
-			}
-			Log.v("XX", "onCreate1");
-
 			frag = new PlayerFragment();
 
 			getSupportFragmentManager().beginTransaction()

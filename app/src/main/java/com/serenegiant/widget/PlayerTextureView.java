@@ -171,7 +171,7 @@ public class PlayerTextureView extends TextureView
 			pixels[i * 3 + 2] = temp[i * 4 + 1]; // R
 		}
 
-		final Point[] points = Wrnch.process(pixels, 244, 128, width, height);
+		final Point[] points = Wrnch.process(pixels, 244, 128, orig.getWidth(), orig.getHeight());
 		overlayView.drawPoints(points);
 
 //		Log.v(TAG, "onSurfaceTextureUpdated done");

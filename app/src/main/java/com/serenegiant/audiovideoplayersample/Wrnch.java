@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Point;
 import android.util.Log;
+import android.util.Pair;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,10 +17,10 @@ public class Wrnch {
         System.loadLibrary("native-lib");
     }
 
-    static native void initWrnchJNI(String dir);
+    static native int[] initWrnchJNI(String dir);
     static native float[] processWrnchJNI(byte[] pic, int cols, int rows);
 
-    static public void init(Context context) throws IOException {
+    static public Pair<Integer,Integer>[] init(Context context) throws IOException {
         final File files = context.getFilesDir();
         files.mkdir();
 
@@ -33,7 +34,14 @@ public class Wrnch {
         copyFile(am.open("libsnpe_dsp_v65_domains_v2_skel.so"), files, "libsnpe_dsp_v65_domains_v2_skel.so");
         copyFile(am.open("libsnpe_dsp_v66_domains_v2_skel.so"), files, "libsnpe_dsp_v66_domains_v2_skel.so");
 
-        initWrnchJNI(files.getAbsolutePath());
+        int[] bones = initWrnchJNI(files.getAbsolutePath());
+        Pair<Integer,Integer>[] result = new Pair[bones.length / 2];
+
+        for (int i = 0; i < result.length; ++i) {
+            result[i] = new Pair<>(bones[i*2], bones[i*2+1]);
+        }
+
+        return result;
     }
 
     static public Point[] process(byte[] img, int cols, int rows, int origWidth, int origHeight) {

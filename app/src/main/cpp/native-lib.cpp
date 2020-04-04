@@ -6,10 +6,10 @@
 
 static wrPoseEstimatorHandle pose_estimator;
 static wrPoseEstimatorOptionsHandle pose_options;
-std::vector< std::string > joint_names_{};
-std::vector< std::pair< int, int > > bone_pairs_{};
+//std::vector< std::string > joint_names_{};
+//std::vector< std::pair< int, int > > bone_pairs_{};
 
-extern "C" JNIEXPORT void JNICALL
+extern "C" JNIEXPORT jintArray JNICALL
 Java_com_serenegiant_audiovideoplayersample_Wrnch_initWrnchJNI(
         JNIEnv* env,
         jobject /* this */,
@@ -25,7 +25,7 @@ Java_com_serenegiant_audiovideoplayersample_Wrnch_initWrnchJNI(
     auto rc = setenv("ADSP_LIBRARY_PATH", path, 1);
     if (rc < 0) {
         __android_log_print(ANDROID_LOG_ERROR, "WRNCH", "Failed to set ADSP_LIBRARY_PATH");
-        return;
+        return env->NewIntArray(0);
     }
 
     auto pose_params = wrPoseParams_Create();
@@ -44,13 +44,13 @@ Java_com_serenegiant_audiovideoplayersample_Wrnch_initWrnchJNI(
     auto wrc = wrPoseEstimator_CreateFromConfig(&pose_estimator, params);
     if (wrc != wrReturnCode_OK) {
         __android_log_print(ANDROID_LOG_ERROR, "WRNCH", "wrPoseEstimator_CreateFromConfig: %s", wrReturnCode_Translate(wrc));
-        return;
+        return env->NewIntArray(0);
     }
 
     wrc = wrPoseEstimator_ReinitializeFromConfig(&pose_estimator, params);
     if (wrc != wrReturnCode_OK) {
         __android_log_print(ANDROID_LOG_ERROR, "WRNCH", "wrPoseEstimator_ReinitializeFromConfig: %s", wrReturnCode_Translate(wrc));
-        return;
+        return env->NewIntArray(0);
     }
 
     pose_options = wrPoseEstimatorOptions_Create();
@@ -64,22 +64,27 @@ Java_com_serenegiant_audiovideoplayersample_Wrnch_initWrnchJNI(
     auto num_bones = wrJointDefinition_GetNumBones(format);
     if (num_joints != 23) {
         __android_log_print(ANDROID_LOG_ERROR, "WRNCH", "Num joints expected 23. Recieved: %d", num_joints);
-        return;
+        return env->NewIntArray(0);
     }
 
-    char const **c_joint_names = new char const *[23];
-    wrJointDefinition_GetJointNames(format, c_joint_names);
-    for(int i = 0; i < num_joints; i++) {
-        joint_names_.push_back(std::string(c_joint_names[i]));
-    }
+//    char const **c_joint_names = new char const *[23];
+//    wrJointDefinition_GetJointNames(format, c_joint_names);
+//    for(int i = 0; i < num_joints; i++) {
+//        joint_names_.push_back(std::string(c_joint_names[i]));
+//    }
 
     uint *c_bone_pairs = new uint[num_bones * 2];
     wrJointDefinition_GetBonePairs(format, c_bone_pairs);
-    for(int i = 0; i < num_bones; i++) {
-        bone_pairs_.emplace_back(c_bone_pairs[i*2+0], c_bone_pairs[i*2+1]);
-    }
+//    for(int i = 0; i < num_bones; i++) {
+//        bone_pairs_.emplace_back(c_bone_pairs[i*2+0], c_bone_pairs[i*2+1]);
+//    }
+
+    auto result = env->NewIntArray(num_bones * 2);
+    env->SetIntArrayRegion(result, 0, num_bones * 2, (jint*) c_bone_pairs);
 
     __android_log_print(ANDROID_LOG_INFO, "WRNCH", "WRNCH Init Done");
+
+    return result;
 }
 
 extern "C" JNIEXPORT jfloatArray JNICALL
