@@ -1,36 +1,14 @@
-package com.serenegiant.audiovideoplayersample;
-/*
- * AudioVideoPlayerSample
- * Sample project to play audio and video from MPEG4 file using MediaCodec.
- *
- * Copyright (c) 2014 saki t_saki@serenegiant.com
- *
- * File name: PlayerFragment.java
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- * All files in the folder are under this Apache License, Version 2.0.
-*/
+package com.samsungnext.audiovideoplayersample;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 
-import com.serenegiant.media.MediaMoviePlayer;
-import com.serenegiant.media.IFrameCallback;
-import com.serenegiant.widget.OverlayView;
-import com.serenegiant.widget.PlayerTextureView;
+import com.samsungnext.media.MediaMoviePlayer;
+import com.samsungnext.media.IFrameCallback;
+import com.samsungnext.widget.OverlayView;
+import com.samsungnext.widget.PlayerTextureView;
 
 import android.app.Activity;
 import android.content.Context;
@@ -146,23 +124,19 @@ public class PlayerFragment extends Fragment {
 	 */
 	public void startPlay() {
 		if (DEBUG) Log.v(TAG, "startPlay:");
-		final Activity activity = getActivity();
-//		try {
-			final File dir = activity.getFilesDir();
-			dir.mkdirs();
-			final File path = new File(dir,"leftlunges_oriana.mp4");
+
+//		final Activity activity = getActivity();
+//		final File dir = activity.getFilesDir();
+//		dir.mkdirs();
+//			final File path = new File(dir,"leftlunges_oriana.mp4");
 //			final File path = new File(dir,"jumpingjacks_tsella01.mp4");
 //			final File path = new File(dir,"yuvalgreenfield.mp4");
 
+		final File path = new File("/data/local/tmp/video.mp4");
 
-		//prepareSampleMovie(path);
-			mPlayerButton.setColorFilter(0x7fff0000);	// turn red
-//			mPlayer = new MediaVideoPlayer(mPlayerView.getSurface(), mIFrameCallback);
-			mPlayer = new MediaMoviePlayer(mPlayerView.getSurface(), mIFrameCallback, false);
-			mPlayer.prepare(path.toString());
-//		} catch (IOException e) {
-//			Log.e(TAG, "startPlay:", e);
-//		}
+		mPlayerButton.setColorFilter(0x7fff0000);	// turn red
+		mPlayer = new MediaMoviePlayer(mPlayerView.getSurface(), mIFrameCallback, false);
+		mPlayer.prepare(path.toString());
 	}
 
 	/**

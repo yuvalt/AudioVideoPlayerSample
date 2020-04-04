@@ -1,4 +1,4 @@
-package com.serenegiant.media;
+package com.samsungnext.media;
 
 /**
  * callback interface

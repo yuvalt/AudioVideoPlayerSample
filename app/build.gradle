@@ -9,7 +9,7 @@ android {
 	}
 
 	defaultConfig {
-		applicationId "com.serenegiant.audiovideoplayersample"
+		applicationId "com.samsungnext.audiovideoplayersample"
 		minSdkVersion 23
 		targetSdkVersion versionTarget
 		versionCode versionCodeNum

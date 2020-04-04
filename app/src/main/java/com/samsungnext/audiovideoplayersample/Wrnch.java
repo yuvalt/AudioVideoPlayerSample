@@ -1,4 +1,4 @@
-package com.serenegiant.audiovideoplayersample;
+package com.samsungnext.audiovideoplayersample;
 
 import android.content.Context;
 import android.content.res.AssetManager;

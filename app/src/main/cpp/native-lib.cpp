@@ -10,7 +10,7 @@ static wrPoseEstimatorOptionsHandle pose_options;
 //std::vector< std::pair< int, int > > bone_pairs_{};
 
 extern "C" JNIEXPORT jintArray JNICALL
-Java_com_serenegiant_audiovideoplayersample_Wrnch_initWrnchJNI(
+Java_com_samsungnext_audiovideoplayersample_Wrnch_initWrnchJNI(
         JNIEnv* env,
         jobject /* this */,
         jstring dirStr) {
@@ -88,7 +88,7 @@ Java_com_serenegiant_audiovideoplayersample_Wrnch_initWrnchJNI(
 }
 
 extern "C" JNIEXPORT jfloatArray JNICALL
-Java_com_serenegiant_audiovideoplayersample_Wrnch_processWrnchJNI(
+Java_com_samsungnext_audiovideoplayersample_Wrnch_processWrnchJNI(
         JNIEnv* env,
         jobject /* this */,
         jbyteArray img,
