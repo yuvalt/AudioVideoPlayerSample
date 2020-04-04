@@ -14,7 +14,9 @@ android {
 		targetSdkVersion versionTarget
 		versionCode versionCodeNum
 		versionName versionNameString
-
+		ndk {
+			abiFilters 'arm64-v8a'
+		}
 		externalNativeBuild {
 			cmake {
 				cppFlags ""
@@ -36,6 +38,14 @@ android {
 		cmake {
 			path "src/main/cpp/CMakeLists.txt"
 			version "3.10.2"
+
+		}
+	}
+
+	sourceSets {
+		main {
+			jniLibs.srcDirs 'ext/wrnch/lib/'
+			assets.srcDirs 'ext/wrnch/bin/wrModels'
 		}
 	}
 }
