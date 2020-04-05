@@ -55,7 +55,8 @@ public class PlayerFragment extends Fragment {
 			overlayView.setBones(bones);
 		}
 		catch (IOException e) {
-			Log.v("WRNCH", e.getMessage());
+			Log.v("WRNCH", "WRNCH Init failed: " + e.toString());
+			return rootView;
 		}
 
 		mPlayerView = (PlayerTextureView)rootView.findViewById(R.id.player_view);
