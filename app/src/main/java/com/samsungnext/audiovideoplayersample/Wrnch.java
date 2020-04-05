@@ -27,14 +27,14 @@ public class Wrnch {
         files.mkdir();
 
         final AssetManager am = context.getAssets();
-        copyFile(am.open("wrsnpe_android_pose2d.enc"), files, "wrsnpe_android_pose2d.enc");
-        copyFile(am.open("libSNPE.so"), files, "libSNPE.so");
-        copyFile(am.open("libsnpe_adsp.so"), files, "libsnpe_adsp.so");
-        copyFile(am.open("libsnpe_dsp_domains_system.so"), files, "libsnpe_dsp_domains_system.so");
-        copyFile(am.open("libsnpe_dsp_domains_v2.so"), files, "libsnpe_dsp_domains_v2.so");
-        copyFile(am.open("libsnpe_dsp_domains_v2_system.so"), files, "libsnpe_dsp_domains_v2_system.so");
-        copyFile(am.open("libsnpe_dsp_v65_domains_v2_skel.so"), files, "libsnpe_dsp_v65_domains_v2_skel.so");
-        copyFile(am.open("libsnpe_dsp_v66_domains_v2_skel.so"), files, "libsnpe_dsp_v66_domains_v2_skel.so");
+        copyFile(context, am.open("wrsnpe_android_pose2d.enc"), new File(files, "wrsnpe_android_pose2d.enc"));
+        copyFile(context, am.open("libSNPE.so"),  new File(files, "libSNPE.so"));
+        copyFile(context, am.open("libsnpe_adsp.so"),  new File(files, "libsnpe_adsp.so"));
+        copyFile(context, am.open("libsnpe_dsp_domains_system.so"),  new File(files, "libsnpe_dsp_domains_system.so"));
+        copyFile(context, am.open("libsnpe_dsp_domains_v2.so"),  new File(files, "libsnpe_dsp_domains_v2.so"));
+        copyFile(context, am.open("libsnpe_dsp_domains_v2_system.so"),  new File(files, "libsnpe_dsp_domains_v2_system.so"));
+        copyFile(context, am.open("libsnpe_dsp_v65_domains_v2_skel.so"),  new File(files, "libsnpe_dsp_v65_domains_v2_skel.so"));
+        copyFile(context, am.open("libsnpe_dsp_v66_domains_v2_skel.so"),  new File(files, "libsnpe_dsp_v66_domains_v2_skel.so"));
 
         int[] bones = initWrnchJNI(files.getAbsolutePath());
         Pair<Integer,Integer>[] result = new Pair[bones.length / 2];
@@ -68,10 +68,8 @@ public class Wrnch {
     }
 
 
-    private static void copyFile(InputStream in, File dir, String outputFile) throws IOException {
-        OutputStream out;
-
-        out = new FileOutputStream(new File(dir, outputFile));
+    private static void copyFile(Context context, InputStream in, File path) throws IOException {
+        OutputStream out = context.openFileOutput(path.getName(), Context.MODE_PRIVATE);
 
         byte[] buffer = new byte[8192];
         int read;
