@@ -9,6 +9,7 @@ static wrPoseEstimatorOptionsHandle pose_options;
 //std::vector< std::string > joint_names_{};
 //std::vector< std::pair< int, int > > bone_pairs_{};
 const bool DEBUG = false;
+static bool initialzed = false;
 
 extern "C" JNIEXPORT jintArray JNICALL
 Java_com_samsungnext_audiovideoplayersample_Wrnch_initWrnchJNI(
@@ -85,6 +86,8 @@ Java_com_samsungnext_audiovideoplayersample_Wrnch_initWrnchJNI(
 
     __android_log_print(ANDROID_LOG_INFO, "WRNCH", "WRNCH Init Done");
 
+    initialzed = true;
+
     return result;
 }
 
@@ -98,6 +101,11 @@ Java_com_samsungnext_audiovideoplayersample_Wrnch_processWrnchJNI(
 
     jboolean isCopy;
     jbyte* b = env->GetByteArrayElements(img, &isCopy);
+
+    if (!initialzed) {
+        __android_log_print(ANDROID_LOG_ERROR, "WRNCH", "Not initialized");
+        return env->NewFloatArray(0);
+    }
 
     auto rc = wrPoseEstimator_ProcessFrame(pose_estimator, (unsigned char*) b, cols, rows, pose_options);
     if (rc != wrReturnCode_OK) {
