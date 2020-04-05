@@ -33,6 +33,6 @@
         android:id="@+id/overlay_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#33DE3C3C" />
+        android:background="#00000000" />
 
 </RelativeLayout>

@@ -13,6 +13,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class Wrnch {
+    private static final boolean DEBUG = false;
+
     static {
         System.loadLibrary("native-lib");
     }
@@ -47,21 +49,19 @@ public class Wrnch {
     static public Point[] process(byte[] img, int cols, int rows, int origWidth, int origHeight) {
         final float[] joints = processWrnchJNI(img, cols, rows);
 
-        Log.v("WRNCH", "GOT JOINTS: " + Integer.toString(joints.length / 2));
+        if (DEBUG) Log.v("WRNCH", "GOT JOINTS: " + Integer.toString(joints.length / 2));
 
         Point[] result = new Point[joints.length / 2];
-        if (result.length == 0) {
-            final int x = 1;
-        }
         for (int i = 0; i < result.length; ++i) {
             float x = joints[i * 2];
             float y = joints[i * 2 + 1];
-//            Log.v("WRNCH", "Joint1: " + Float.toString(x) + "," + Float.toString(y));
+
             int xx = (int) (x * (float) origWidth);
             int yy = (int) (y * (float) origHeight);
-//            Log.v("WRNCH", "Joint2: " + Integer.toString(xx) + "," + Integer.toString(yy));
+
             result[i] = new Point(xx, yy);
-//            Log.v("WRNCH", "Joint3: " + Integer.toString(result[i].x) + "," + Integer.toString(result[i].y));
+
+            if (DEBUG) Log.v("WRNCH", "Joint: " + Integer.toString(result[i].x) + "," + Integer.toString(result[i].y));
         }
 
         return result;

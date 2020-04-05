@@ -20,6 +20,10 @@ public class PlayerTextureView extends TextureView
 
 	private double mRequestedAspect = -1.0;
 	private Surface mSurface;
+	private OverlayView overlayView;
+	private int width = 0;
+	private int height = 0;
+	private int horizPadding = 0;
 
 	public PlayerTextureView(Context context) {
 		this(context, null, 0);
@@ -47,6 +51,7 @@ public class PlayerTextureView extends TextureView
 	 * <code>aspect ratio = width / height</code>.
 	 */
 	public void setAspectRatio(double aspectRatio) {
+		horizPadding = 0;
 		if (aspectRatio < 0) {
 			throw new IllegalArgumentException();
 		}
@@ -61,7 +66,6 @@ public class PlayerTextureView extends TextureView
 	 */
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
 		if (mRequestedAspect > 0) {
 			int initialWidth = MeasureSpec.getSize(widthMeasureSpec);
 			int initialHeight = MeasureSpec.getSize(heightMeasureSpec);
@@ -81,7 +85,9 @@ public class PlayerTextureView extends TextureView
 					initialHeight = (int) (initialWidth / mRequestedAspect);
 				} else {
 					// adjust width from height
-					initialWidth = (int) (initialHeight * mRequestedAspect);
+					final int newWidth = (int) (initialHeight * mRequestedAspect);
+					this.horizPadding = initialWidth - newWidth;
+					initialWidth = newWidth;
 				}
 				initialWidth += horizPadding;
 				initialHeight += vertPadding;
@@ -95,15 +101,12 @@ public class PlayerTextureView extends TextureView
 
 	@Override
 	public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-		// Create an OpenGL ES 2.0 context
-
 		if (mSurface != null)
 			mSurface.release();
 		mSurface = new Surface(surface);
+		this.width = width;
+		this.height = height;
 	}
-
-	int width = 0;
-	int height = 0;
 
 	@Override
 	public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
@@ -120,18 +123,13 @@ public class PlayerTextureView extends TextureView
 		return true;
 	}
 
-	private OverlayView overlayView;
-
 	public void setOverlayView(OverlayView overlayView) {
 		this.overlayView = overlayView;
 	}
 
 	@Override
 	public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-		final Bitmap orig = getBitmap();
-
 		final Bitmap bitmap = getBitmap(244, 128);
-//		Log.v(TAG, "onSurfaceTextureUpdated: " + bitmap.getHeight());
 
 		int bytes = bitmap.getByteCount();
 
@@ -148,10 +146,8 @@ public class PlayerTextureView extends TextureView
 			pixels[i * 3 + 2] = temp[i * 4 + 1]; // R
 		}
 
-		final Point[] points = Wrnch.process(pixels, 244, 128, orig.getWidth(), orig.getHeight());
-		overlayView.drawPoints(points);
-
-//		Log.v(TAG, "onSurfaceTextureUpdated done");
+		final Point[] points = Wrnch.process(pixels, 244, 128, width, height);
+		overlayView.drawPoints(points, horizPadding / 2);
 	}
 
 	public Surface getSurface() {

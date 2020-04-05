@@ -8,6 +8,7 @@ static wrPoseEstimatorHandle pose_estimator;
 static wrPoseEstimatorOptionsHandle pose_options;
 //std::vector< std::string > joint_names_{};
 //std::vector< std::pair< int, int > > bone_pairs_{};
+const bool DEBUG = false;
 
 extern "C" JNIEXPORT jintArray JNICALL
 Java_com_samsungnext_audiovideoplayersample_Wrnch_initWrnchJNI(
@@ -111,10 +112,9 @@ Java_com_samsungnext_audiovideoplayersample_Wrnch_processWrnchJNI(
         auto pose_score = wrPose2d_GetScore(it);
         auto num_joints = wrPose2d_GetNumJoints(it);
         auto joints = wrPose2d_GetJoints(it);
-//        auto scores = wrPose2d_GetScores(it);
 
         auto is_main = wrPose2d_GetIsMain(it);
-        __android_log_print(ANDROID_LOG_INFO, "WRNCH", "POSE SCORE: %.2f %d %d", pose_score, is_main, num_joints);
+        if (DEBUG) __android_log_print(ANDROID_LOG_INFO, "WRNCH", "POSE SCORE: %.2f %d %d", pose_score, is_main, num_joints);
 
         if (is_main == 1) {
             auto result = env->NewFloatArray(num_joints * 2);

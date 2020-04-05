@@ -37,7 +37,6 @@ public class PlayerFragment extends Fragment {
 	 */
 	private ImageButton mPlayerButton;
 
-//	private MediaVideoPlayer mPlayer;
 	private MediaMoviePlayer mPlayer;
 
 	public PlayerFragment() {
@@ -51,7 +50,6 @@ public class PlayerFragment extends Fragment {
 
 		final OverlayView overlayView = (OverlayView) rootView.findViewById(R.id.overlay_view);
 
-		Log.v("XX", "onCreate1");
 		try {
 			final Pair[] bones = Wrnch.init(getContext());
 			overlayView.setBones(bones);
@@ -59,7 +57,6 @@ public class PlayerFragment extends Fragment {
 		catch (IOException e) {
 			Log.v("WRNCH", e.getMessage());
 		}
-		Log.v("XX", "onCreate1");
 
 		mPlayerView = (PlayerTextureView)rootView.findViewById(R.id.player_view);
 		mPlayerView.setAspectRatio(16 / 9.f);
@@ -79,9 +76,7 @@ public class PlayerFragment extends Fragment {
 		int delay = 2000; //milliseconds
 
 		handler.postDelayed(new Runnable(){
-			public void run(){
-				//do something
-				//handler.postDelayed(this, delay);
+			public void run() {
 				startPlay();
 			}
 		}, delay);
@@ -125,6 +120,7 @@ public class PlayerFragment extends Fragment {
 	public void startPlay() {
 		if (DEBUG) Log.v(TAG, "startPlay:");
 
+		// HINT: CHANGE VIDEO INPUT
 //		final Activity activity = getActivity();
 //		final File dir = activity.getFilesDir();
 //		dir.mkdirs();
