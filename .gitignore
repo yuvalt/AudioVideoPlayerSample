@@ -33,3 +33,4 @@ proguard/
 .idea/codeStyles
 .idea/inspectionProfiles
 .idea/caches
+app/.externalNativeBuild/cmake
